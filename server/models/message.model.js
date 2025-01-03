@@ -7,7 +7,7 @@ const messageSchema = new Schema({
     imageUrl: {type: String, default: ""},
     videoUrl: {type: String, default: ""},
     seen: {type: Boolean, default: false},
-    mesByUserId: {type: mongoose.Types.ObjectId, ref: 'User', require: true}
+    msgByUserId: {type: mongoose.Types.ObjectId, ref: 'User', require: true}
 },{timestamps:true});
 
 const MessageModel = mongoose.model("Message", messageSchema);
