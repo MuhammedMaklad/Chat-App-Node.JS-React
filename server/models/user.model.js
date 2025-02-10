@@ -38,7 +38,7 @@ const userSchema = new Schema({
 userSchema.pre("save", async function(next) {
     try{
         if (this.isModified("password") || this.isNew) {
-            const salt = await bcrypt.salt(10);
+            const salt = await bcrypt.getSalt(10);
             this.password = await bcrypt.hash(this.password, salt)
         }
         next();
@@ -47,7 +47,6 @@ userSchema.pre("save", async function(next) {
         console.log("Error when hashing password " + e )
     }
 })
-userSchema.index({email:1})
 const UserModel = mongoose.model("User", userSchema);
 
 module.exports = UserModel;

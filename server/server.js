@@ -20,8 +20,8 @@ app.use(express.json());
 app.use(cookieParser())
 
 // middlewares
-const NotFoundMiddleware = require("middleware/NotFound.middleware");
-const ErrorMiddleware = require("middleware/errorHandler.middleware");
+const NotFoundMiddleware = require("./middleware/NotFound.middleware");
+const ErrorMiddleware = require("./middleware/errorHandler.middleware");
 
 // routers
 const chatRouter = require("./routes/main.route");
@@ -29,7 +29,7 @@ const chatRouter = require("./routes/main.route");
 app.get("/", function(request, response){
     response.send("Muhammed on da Code!..");
 })
-app.use("/api/v1/chat/",chatRouter);
+app.use("/api/v1/chat",chatRouter);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorMiddleware);

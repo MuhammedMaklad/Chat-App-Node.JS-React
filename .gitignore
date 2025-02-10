@@ -1,0 +1,39 @@
+# Global ignore for node_modules and build artifacts
+node_modules/
+dist/
+build/
+.vscode/
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Ignore logs and temporary files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+*.tmp
+
+# Server-specific ignore
+server/node_modules/
+server/dist/
+server/.env
+server/.env.local
+server/.env.*.local
+
+# Client-specific ignore
+client/node_modules/
+client/dist/
+client/.env
+client/.env.local
+client/.env.*.local
+client/.vite/
+
+# Ignore IDE/editor files
+.idea/
+*.iml
+
+# Ignore OS-generated files
+Thumbs.db
+.DS_Store
