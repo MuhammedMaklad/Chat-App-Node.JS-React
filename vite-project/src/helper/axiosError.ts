@@ -9,6 +9,7 @@ export interface ICustomAxiosError {
     data?: any; // The data returned from the server
     status?: number; // Status code of the response
     statusText?: string; // HTTP status text
+    msg?: string; // Custom message from the server
   };
   // You can add additional properties here based on your needs
 }

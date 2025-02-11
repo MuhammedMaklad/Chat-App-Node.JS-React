@@ -3,13 +3,13 @@ import { IRegisterResponse } from '../../interfaces/Response/IRegisterResponse'
 import { ICustomAxiosError } from '../../helper/axiosError';
 import axiosInstance from '../../api/axiosConfig';
 
+import { createStandaloneToast } from "@chakra-ui/react"
 
-
+const { toast } = createStandaloneToast();
 export interface IUsersState {
   loading: boolean;
   data: IRegisterResponse | null;
   error: ICustomAxiosError | null;
-  statusMessage: string;
 }
 
 export interface IRegisterCredentials {
@@ -22,12 +22,11 @@ const initialState: IUsersState = {
   loading: false,
   data: null,
   error: null,
-  statusMessage: '',
 }
 
 // First, create the thunk
 export const userRegister = createAsyncThunk<IRegisterResponse, IRegisterCredentials, { rejectValue: ICustomAxiosError }>(
-  'users/register',
+  'register/userRegister',
   async (credentials, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.post<IRegisterResponse>("/register", credentials)
@@ -38,6 +37,8 @@ export const userRegister = createAsyncThunk<IRegisterResponse, IRegisterCredent
       if (!error.response) {
         throw error;
       }
+      // console.log("AsyncThunk Error")
+      // console.log(error)
       return rejectWithValue({
         status: error.response.status,
         message: error.response.data.message || 'Registration failed',
@@ -56,38 +57,46 @@ const registerSlice = createSlice({
       state.loading = false;
       state.data = null;
       state.error = null;
-      state.statusMessage = '';
     },
-    setStatusMessage: (state, action: PayloadAction<string>) => {
-      state.statusMessage = action.payload;
-    }
   },
-  extraReducers: (builder) => {
+  extraReducers: (builder) => { // for middleware to handle request-response lifecycle
     builder.addCase(userRegister.pending, (state) => {
       state.loading = true;
       state.error = null;
-      state.statusMessage = 'Registration in progress...';
     })
       .addCase(userRegister.fulfilled, (state, action: PayloadAction<IRegisterResponse>) => {
         state.loading = false;
         state.data = action.payload;
         state.error = null;
-        state.statusMessage = 'Registration successful!';
+        toast({
+          title: "Register Successfully",
+          description: action.payload?.message,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: 'top'
+        });
       })
       .addCase(userRegister.rejected, (state, action) => {
         state.loading = false;
         state.data = null;
         state.error = action.payload ? (action.payload as ICustomAxiosError) : null;
-        state.statusMessage = action.payload?.message || 'Registration failed';
+        toast({
+          title: action.payload?.message ?? "InValid Register",
+          status: "error",
+          description: action.payload?.response?.msg,
+          duration: 9000,
+          isClosable: true,
+          position: 'top'
+        });
       })
   },
 })
 // Export actions
-export const { resetRegistration, setStatusMessage } = registerSlice.actions;
+export const { resetRegistration } = registerSlice.actions;
 
 // Enhanced selectors with type safety
 export const selectRegister = (state: { register: IUsersState }) => state.register;
-export const selectRegistrationStatus = (state: { register: IUsersState }) => state.register.statusMessage;
 export const selectRegistrationLoading = (state: { register: IUsersState }) => state.register.loading;
 export const selectRegistrationError = (state: { register: IUsersState }) => state.register.error;
 

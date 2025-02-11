@@ -3,9 +3,9 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import RegisterPage from "../pages/RegisterPage";
 import { Flex, Heading } from "@chakra-ui/react";
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

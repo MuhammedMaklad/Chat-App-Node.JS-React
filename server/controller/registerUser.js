@@ -3,7 +3,6 @@ const UserModel = require("../models/user.model");
 const {StatusCodes} = require('http-status-codes');
 const registerUser = async (req, res) => {
     const {name, email, password, profilePicture} = req.body;
-    console.log(`This is request body : ${req.body}`)
     console.log(name,email, password)
     if(!name || !email || !password)
         throw new BadRequestError("Please Fill Required Fields");
