@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registerValidationSchema } from "../validation/registerValidationSchema";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,6 +40,7 @@ interface IError {
 }
 
 const RegisterPage = () => {
+  // Hocks
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState<IData>({
     firstName: "",
@@ -51,7 +52,7 @@ const RegisterPage = () => {
 
   const dispatch: AppDispatch = useDispatch();
   const { loading } = useSelector(selectRegister);
-
+  const navigate = useNavigate();
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
     setError({ ...error, [e.target.name]: "" });
@@ -63,14 +64,16 @@ const RegisterPage = () => {
       await registerValidationSchema.validate(data, { abortEarly: false });
       setError({});
       console.log("Form data is valid:", data);
-      const val = await dispatch(
+      const response = await dispatch(
         userRegister({
           name: `${data.firstName}-${data.lastName}`,
           email: data.email,
           password: data.password,
         })
       );
-      console.log(val);
+      if (response?.payload?.success) {
+        navigate("/auth/login");
+      }
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         console.log("Validation errors:", err.errors); // Debugging
