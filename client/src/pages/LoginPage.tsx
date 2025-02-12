@@ -14,9 +14,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosConfig";
-import { ICustomAxiosError } from "../helper/axiosError";
+import cookieServices from "../services/cookieServices";
 
 const LoginPage = () => {
   // Hocks
@@ -28,6 +28,9 @@ const LoginPage = () => {
     password: "",
   });
   const toast = useToast();
+  const navigate = useNavigate();
+  const [isLoading, setLoading] = useState<boolean>(false);
+
   // Event Handler
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({
@@ -35,30 +38,33 @@ const LoginPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  // TODO: Handle Login Process
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     try {
+      setLoading(true);
       const response = await axiosInstance.post("/login", credentials);
+      setLoading(false);
       if (response.data.success) {
+        cookieServices.set("token", response.data.token);
         toast({
           title: "Logged in successfully",
           description: "Welcome back!",
           status: "success",
-          duration: 5000,
+          duration: 2000,
           position: "top",
         });
-        // Redirect to dashboard
-        // window.location.href = "/dashboard";
       }
-      // Clear form fields after successful login
       setCredentials({ email: "", password: "" });
+      navigate("/");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: "Login failed",
         description: err.response.data.msg,
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
         position: "top",
       });
@@ -67,16 +73,15 @@ const LoginPage = () => {
   return (
     <Flex
       minH={"100vh"}
-      align={"center"}
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+      <Stack spacing={8} mx={"auto"} minW={"lg"} py={10} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
+          <Heading fontSize={"4xl"}>Sign In</Heading>
+          {/* <Text fontSize={"lg"} color={"gray.600"}>
             to enjoy all of our cool <Text color={"blue.400"}>features</Text> ✌️
-          </Text>
+          </Text> */}
         </Stack>
         <Box
           rounded={"lg"}
@@ -108,6 +113,7 @@ const LoginPage = () => {
             <Stack spacing={10}>
               <Button
                 type="submit"
+                isLoading={isLoading}
                 bg={"blue.400"}
                 color={"white"}
                 _hover={{

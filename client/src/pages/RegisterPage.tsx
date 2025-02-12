@@ -60,6 +60,7 @@ const RegisterPage = () => {
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     try {
       await registerValidationSchema.validate(data, { abortEarly: false });
       setError({});
@@ -91,7 +92,7 @@ const RegisterPage = () => {
   return (
     <Flex
       minH={"100vh"}
-      align={"center"}
+      // align={"center"}
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
@@ -100,9 +101,9 @@ const RegisterPage = () => {
           <Heading fontSize={"4xl"} textAlign={"center"}>
             Sign up
           </Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
+          {/* <Text fontSize={"lg"} color={"gray.600"}>
             to enjoy all of our cool features ✌️
-          </Text>
+          </Text> */}
         </Stack>
         <Box
           rounded={"lg"}
