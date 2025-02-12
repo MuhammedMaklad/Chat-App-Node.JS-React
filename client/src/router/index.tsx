@@ -7,6 +7,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import AuthLayout from "../layout/Auth";
+import HomePage from "../pages/Home";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,14 +19,7 @@ const router = createBrowserRouter(
         </Flex>
       }
     >
-      <Route
-        index
-        element={
-          <Heading color={"red.500"}>
-            Home Page : {import.meta.env.VITE_REACT_APP_API_URL}
-          </Heading>
-        }
-      />
+      <Route index element={<HomePage />} />
       <Route path="auth" element={<AuthLayout />}>
         <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<LoginPage />} />
