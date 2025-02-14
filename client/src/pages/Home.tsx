@@ -1,13 +1,5 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Avatar,
-  Input,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Avatar, useColorModeValue } from "@chakra-ui/react";
 // import { Outlet } from "react-router-dom";
-import logo from "../assets/logo.png"; // Adjust the import path as necessary
 import Sidebar from "../components/Sidebar";
 
 const HomePage = () => {
@@ -48,9 +40,9 @@ const HomePage = () => {
           </Text>
           <Text color="gray.500">Select user to send message</Text>
         </Flex>
-        <Box mt={4}>
+        {/* <Box mt={4}>
           <Input placeholder="Type your message..." />
-        </Box>
+        </Box> */}
       </Flex>
     </Flex>
   );

@@ -6,15 +6,22 @@ import {
   Avatar,
   useColorModeValue,
   useToast,
+  AvatarBadge,
 } from "@chakra-ui/react";
 import { FiLogOut } from "react-icons/fi";
 import axiosInstance from "../api/axiosConfig";
 import cookieServices from "../services/cookieServices";
+import EditUserModel from "./EditUserModel";
+import { useState } from "react";
 
 const Sidebar = () => {
   const sidebarBg = useColorModeValue("gray.200", "gray.700");
 
   const toast = useToast();
+  const [openEditModel, setOpenEditModel] = useState<boolean>(false);
+  const onCloseEditModel = () => setOpenEditModel(false);
+
+  // Handlers
   const handleLogout = async () => {
     try {
       await axiosInstance.get("/logout");
@@ -46,7 +53,15 @@ const Sidebar = () => {
         <IconButton icon={<ChatIcon />} aria-label="Messages" />
         <IconButton icon={<AddIcon />} aria-label="Add User" />
         <Spacer />
-        <Avatar name="User" src="https://bit.ly/dan-abramov" size="sm" />
+        <IconButton
+          aria-label="Edit User Info"
+          onClick={() => setOpenEditModel(true)}
+        >
+          <Avatar name="User" src="https://bit.ly/dan-abramov" size="sm">
+            <AvatarBadge boxSize="1.25em" bg="green.500" />
+          </Avatar>
+        </IconButton>
+        <EditUserModel isOpen={openEditModel} onClose={onCloseEditModel} />
         <IconButton
           icon={<FiLogOut />}
           aria-label="Logout"
