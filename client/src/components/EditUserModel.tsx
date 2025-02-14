@@ -14,7 +14,10 @@ import {
   Stack,
   useColorModeValue,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
+import { MouseEvent, useRef, useState } from "react";
+import { uploadService } from "../services/upload";
 
 interface IProp {
   isOpen: boolean;
@@ -22,6 +25,41 @@ interface IProp {
 }
 
 const EditUserModel = ({ isOpen, onClose }: IProp) => {
+  const toast = useToast();
+  const uploadPhotoRef = useRef<HTMLInputElement>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string>(
+    "https://bit.ly/sage-adebayo"
+  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleOpenUploadPhoto = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    uploadPhotoRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+
+      // Upload the file to Cloudinary (or your server)
+      const result = await uploadService.uploadFile(file);
+      if (!uploadService.isUploadError(result)) {
+        setAvatarUrl(result.secure_url); // Update the avatar URL with the uploaded image
+        toast({
+          title: "Upload Success",
+          description: "Image uploaded successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        console.error("Upload failed:", result.message);
+      }
+    }
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -47,7 +85,7 @@ const EditUserModel = ({ isOpen, onClose }: IProp) => {
             <FormLabel>User Icon</FormLabel>
             <Stack direction={["column", "row"]} spacing={6}>
               <Center>
-                <Avatar size="xl" src="https://bit.ly/sage-adebayo">
+                <Avatar size="xl" src={avatarUrl}>
                   <AvatarBadge
                     as={IconButton}
                     size="sm"
@@ -60,7 +98,16 @@ const EditUserModel = ({ isOpen, onClose }: IProp) => {
                 </Avatar>
               </Center>
               <Center w="full">
-                <Button w="full">Change Icon</Button>
+                <Button w="full" onClick={handleOpenUploadPhoto}>
+                  Change Icon
+                </Button>
+                <Input
+                  type="file"
+                  ref={uploadPhotoRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                  accept="image/*" // Restrict to image files
+                />
               </Center>
             </Stack>
           </FormControl>
