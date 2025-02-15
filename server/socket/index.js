@@ -13,7 +13,8 @@ const getConversation = require("../helpers/getConversation");
 
 // socket connection
 const server = createServer(app);
-const io = new Server(server, { cors: { origin: "*" ,        credentials : true
+const io = new Server(server, { cors: { origin: "*" ,
+        credentials : true
     } });
 
 
@@ -23,15 +24,15 @@ io.on("connection",async (socket) => {
     console.log("new connection with id " + socket.id);
     const token = socket.handshake.auth.token;
     const user = await getUserFromToken(token);
-    if(user.logout){
-        socket.emit("error" , {
-            message: "UnAuthorized Access",
-            statusCode: StatusCodes.UNAUTHORIZED,
-            success:false,
-            error :true,
-        })
-        return;
-    }
+    // if(user.logout){
+    //     socket.emit("error" , {
+    //         message: "UnAuthorized Access",
+    //         statusCode: StatusCodes.UNAUTHORIZED,
+    //         success:false,
+    //         error :true,
+    //     })
+    //     return;
+    // }
     // create room to this user
     socket.join(user?._id?.toString())
     onlineUsers.add(user?._id.toString());

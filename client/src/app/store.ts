@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import registerSlice from "./features/registerSlice";
+import userSlice from './features/userSlice';
 
 
 
 export const store = configureStore({
   reducer: {
     // Define your reducers here
-    register: registerSlice
+    register: registerSlice,
+    user: userSlice
   },
   // Other store setups...
 })

@@ -1,11 +1,34 @@
 import { Box, Flex, Text, Avatar, useColorModeValue } from "@chakra-ui/react";
 // import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import { useEffect } from "react";
+import { socketService } from "../services/socket";
+import cookieServices from "../services/cookieServices";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../app/store";
+import { setOnlineUser, setSocketConnection } from "../app/features/userSlice";
 
 const HomePage = () => {
   const chatListBg = useColorModeValue("white", "gray.800");
   const mainContentBg = useColorModeValue("gray.100", "gray.900");
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const connection = socketService.connect({
+      token: cookieServices.get("token"),
+    });
+
+    // get online users
+    socketService.on("getOnlineUsers", (users: string[]) => {
+      dispatch(setOnlineUser(users));
+    });
+
+    dispatch(setSocketConnection(connection));
+    return () => {
+      socketService.disconnect();
+    };
+  }, []);
   return (
     <Flex h="100vh">
       {/* Sidebar */}

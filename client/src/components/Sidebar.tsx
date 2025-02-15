@@ -5,7 +5,6 @@ import {
   Spacer,
   Avatar,
   useColorModeValue,
-  useToast,
   AvatarBadge,
 } from "@chakra-ui/react";
 import { FiLogOut } from "react-icons/fi";
@@ -13,38 +12,28 @@ import axiosInstance from "../api/axiosConfig";
 import cookieServices from "../services/cookieServices";
 import EditUserModel from "./EditUserModel";
 import { useState } from "react";
+import useCustomToast from "./Ui/CustomToast";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const sidebarBg = useColorModeValue("gray.200", "gray.700");
 
-  const toast = useToast();
   const [openEditModel, setOpenEditModel] = useState<boolean>(false);
   const onCloseEditModel = () => setOpenEditModel(false);
+
+  const showToast = useCustomToast();
+  const navigate = useNavigate();
 
   // Handlers
   const handleLogout = async () => {
     try {
       await axiosInstance.get("/logout");
       cookieServices.remove("token");
-      toast({
-        title: "Logged out successfully",
-        description: "See you next time!",
-        status: "success",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
+      showToast("Logged out successfully", "See You Next Time!.", "success");
+      navigate("/login");
     } catch (error) {
-      toast({
-        title: "Error logging out",
-        description: "Please try again later.",
-        status: "error",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
+      showToast("Error logging out", "Please try again later.", "error");
       console.error("Error logging out:", error);
-      return;
     }
   };
   return (

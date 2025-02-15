@@ -11,12 +11,12 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosConfig";
 import cookieServices from "../services/cookieServices";
+import useCustomToast from "../components/Ui/CustomToast";
 
 const LoginPage = () => {
   // Hocks
@@ -27,9 +27,9 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const toast = useToast();
   const navigate = useNavigate();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const showToast = useCustomToast();
 
   // Event Handler
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,26 +48,13 @@ const LoginPage = () => {
       setLoading(false);
       if (response.data.success) {
         cookieServices.set("token", response.data.token);
-        toast({
-          title: "Logged in successfully",
-          description: "Welcome back!",
-          status: "success",
-          duration: 2000,
-          position: "top",
-        });
+        showToast("Logged in successfully", "Welcome back!", "success");
       }
       setCredentials({ email: "", password: "" });
       navigate("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({
-        title: "Login failed",
-        description: err.response.data.msg,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
+      showToast("Login failed", err.response.data.msg, "error");
     }
   };
   return (
