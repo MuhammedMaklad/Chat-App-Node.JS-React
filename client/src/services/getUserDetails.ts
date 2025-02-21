@@ -11,6 +11,7 @@ export const getUserDetails = async () => {
     }
   }
   catch (err) {
+    console.log("Error when get User Details", err)
     return err;
   }
 }

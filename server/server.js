@@ -12,7 +12,7 @@ const port = process.env.PORT ||3000
 connect_to_database();
 app.use(cors(
     {
-        origin: '*',
+        origin:['http://localhost:5173'],
         credentials: true,
     }
 ))

@@ -16,7 +16,7 @@ import {
   useColorModeValue,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { registerValidationSchema } from "../validation/registerValidationSchema";
@@ -24,6 +24,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRegister, userRegister } from "../app/features/registerSlice";
 import { AppDispatch } from "../app/store";
+import cookieServices from "../services/cookieServices";
 
 interface IData {
   firstName: string;
@@ -40,6 +41,10 @@ interface IError {
 }
 
 const RegisterPage = () => {
+  useEffect(() => {
+    const token = cookieServices.get("token");
+    if (token) navigate("/");
+  });
   // Hocks
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState<IData>({

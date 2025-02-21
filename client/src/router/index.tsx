@@ -9,43 +9,15 @@ import AuthLayout from "../layout/Auth";
 import HomePage from "../pages/Home";
 import ErrorPage from "../pages/Error";
 import cookieServices from "../services/cookieServices";
-import ProtectedRoute from "../components/auth/ProtectedRoute";
 
-const isAuthenticated = cookieServices.get("token") ? true : false;
+const token = cookieServices.get("token");
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" errorElement={<ErrorPage />}>
-      <Route
-        index
-        element={
-          <ProtectedRoute
-            isAuthenticated={isAuthenticated}
-            child={<HomePage />}
-            redirect="/auth/login"
-          />
-        }
-      />
+      <Route index element={<HomePage />} />
       <Route path="auth" element={<AuthLayout />}>
-        <Route
-          path="register"
-          element={
-            <ProtectedRoute
-              isAuthenticated={isAuthenticated}
-              child={<RegisterPage />}
-              redirect="/home"
-            />
-          }
-        />
-        <Route
-          path="login"
-          element={
-            <ProtectedRoute
-              isAuthenticated={isAuthenticated}
-              child={<LoginPage />}
-              redirect="/home"
-            />
-          }
-        />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="login" element={<LoginPage />} />
       </Route>
     </Route>
   )

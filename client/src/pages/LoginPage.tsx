@@ -12,14 +12,18 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosConfig";
 import cookieServices from "../services/cookieServices";
 import useCustomToast from "../components/Ui/CustomToast";
 
 const LoginPage = () => {
-  console.log(cookieServices.get("token"));
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = cookieServices.get("token");
+    if (token) navigate("/");
+  });
   // Hocks
   const [credentials, setCredentials] = useState<{
     email: string;
