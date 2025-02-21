@@ -30,7 +30,7 @@ const Sidebar = () => {
       await axiosInstance.get("/logout");
       cookieServices.remove("token");
       showToast("Logged out successfully", "See You Next Time!.", "success");
-      navigate("/login");
+      navigate("/auth/login");
     } catch (error) {
       showToast("Error logging out", "Please try again later.", "error");
       console.error("Error logging out:", error);

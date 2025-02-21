@@ -4,8 +4,8 @@ const updateUserDetails = require("../controller/updateUserDetails");
 const searchUser = require("../controller/searchUser");
 const userDetails = require("../controller/userDetails")
 const userLoginController = require("../controller/loginUser.controller")
-const router = require('express').Router()
 
+const router = require('express').Router()
 //create user api
 router.post('/register',registerUser)
 //check user email

@@ -64,7 +64,6 @@ const RegisterPage = () => {
     try {
       await registerValidationSchema.validate(data, { abortEarly: false });
       setError({});
-      console.log("Form data is valid:", data);
       const response = await dispatch(
         userRegister({
           name: `${data.firstName}-${data.lastName}`,

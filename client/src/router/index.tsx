@@ -3,26 +3,49 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import { Flex, Heading } from "@chakra-ui/react";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import AuthLayout from "../layout/Auth";
 import HomePage from "../pages/Home";
+import ErrorPage from "../pages/Error";
+import cookieServices from "../services/cookieServices";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
+const isAuthenticated = cookieServices.get("token") ? true : false;
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      errorElement={
-        <Flex justifyContent={"center"} alignItems={"center"} minH={"100vh"}>
-          <Heading textAlign={"center"}>404 Page Not Found</Heading>
-        </Flex>
-      }
-    >
-      <Route index element={<HomePage />} />
+    <Route path="/" errorElement={<ErrorPage />}>
+      <Route
+        index
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            child={<HomePage />}
+            redirect="/auth/login"
+          />
+        }
+      />
       <Route path="auth" element={<AuthLayout />}>
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route
+          path="register"
+          element={
+            <ProtectedRoute
+              isAuthenticated={isAuthenticated}
+              child={<RegisterPage />}
+              redirect="/home"
+            />
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <ProtectedRoute
+              isAuthenticated={isAuthenticated}
+              child={<LoginPage />}
+              redirect="/home"
+            />
+          }
+        />
       </Route>
     </Route>
   )

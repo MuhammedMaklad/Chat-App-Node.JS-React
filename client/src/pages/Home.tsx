@@ -14,6 +14,7 @@ const HomePage = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {});
   useEffect(() => {
     const connection = socketService.connect({
       token: cookieServices.get("token"),

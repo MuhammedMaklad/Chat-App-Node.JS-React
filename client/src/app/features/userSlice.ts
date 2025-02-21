@@ -19,7 +19,6 @@ const initialState: InitialState = {
   onlineUser: [],
   socketConnection: null
 }
-
 const userSlice = createSlice({
   name: "user",
   initialState,

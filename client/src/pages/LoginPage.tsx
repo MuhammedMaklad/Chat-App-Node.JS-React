@@ -19,6 +19,7 @@ import cookieServices from "../services/cookieServices";
 import useCustomToast from "../components/Ui/CustomToast";
 
 const LoginPage = () => {
+  console.log(cookieServices.get("token"));
   // Hocks
   const [credentials, setCredentials] = useState<{
     email: string;
@@ -45,16 +46,17 @@ const LoginPage = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post("/login", credentials);
-      setLoading(false);
       if (response.data.success) {
         cookieServices.set("token", response.data.token);
         showToast("Logged in successfully", "Welcome back!", "success");
+        setCredentials({ email: "", password: "" });
+        navigate("/");
       }
-      setCredentials({ email: "", password: "" });
-      navigate("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       showToast("Login failed", err.response.data.msg, "error");
+    } finally {
+      setLoading(false);
     }
   };
   return (

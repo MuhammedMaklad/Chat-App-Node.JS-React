@@ -1,5 +1,4 @@
 interface IProps {}
-
 const ChatTail = ({}: IProps) => {
   return (
     <>
