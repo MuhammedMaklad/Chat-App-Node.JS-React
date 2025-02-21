@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL as string;
+const SOCKET_SERVER_URL = import.meta.env.VITE_REACT_APP_SOCKET_SERVER_URL as string;
 
 interface SocketOptions {
   url?: string;
@@ -11,15 +11,16 @@ class SocketService {
   public socket: Socket | null = null;
 
   connect(config?: SocketOptions) {
+    console.log("this socket url" + SOCKET_SERVER_URL)
+    console.log(config?.token)
     if (this.socket?.connected)
       return;
 
     const url = config?.url || SOCKET_SERVER_URL;
     const defaultOptions = {
       transports: ['websocket'],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      withCredentials: true // Required because your backend allows credentials
+
     }
     this.socket = io(url, {
       ...defaultOptions,

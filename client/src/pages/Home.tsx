@@ -6,7 +6,11 @@ import { socketService } from "../services/socket";
 import cookieServices from "../services/cookieServices";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/store";
-import { setOnlineUser, setSocketConnection } from "../app/features/userSlice";
+import {
+  setOnlineUser,
+  setSocketConnection,
+  setUser,
+} from "../app/features/userSlice";
 import { getUserDetails } from "../services/getUserDetails";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     const token = cookieServices.get("token");
     if (!token) navigate("/auth/login");
-  });
+  }, []);
   const chatListBg = useColorModeValue("white", "gray.800");
   const mainContentBg = useColorModeValue("gray.100", "gray.900");
 
@@ -23,25 +27,26 @@ const HomePage = () => {
 
   useEffect(() => {
     // get user information
-    const dowork = async () => {
+    const doWork = async () => {
       const userInfo = await getUserDetails();
-      console.log("fetching user information");
-      console.log(userInfo);
+      dispatch(setUser(userInfo));
     };
-    dowork();
+    doWork();
   }, []);
+
   useEffect(() => {
-    // const connection = socketService.connect({
-    //   token: cookieServices.get("token"),
-    // });
+    const connection = socketService.connect({
+      token: cookieServices.get("token"),
+    });
+    console.log(`This is Connection to chat:  ${connection}`);
     // // get online users
     // socketService.on("getOnlineUsers", (users: string[]) => {
     //   dispatch(setOnlineUser(users));
     // });
     // dispatch(setSocketConnection(connection));
-    // return () => {
-    //   socketService.disconnect();
-    // };
+    return () => {
+      socketService.disconnect();
+    };
   }, []);
   return (
     <Flex h="100vh">

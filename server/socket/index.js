@@ -13,7 +13,7 @@ const getConversation = require("../helpers/getConversation");
 
 // socket connection
 const server = createServer(app);
-const io = new Server(server, { cors: { origin: "*" ,
+const io = new Server(server, { cors: { origin: "http://localhost:5173" ,
         credentials : true
     } });
 
@@ -24,6 +24,7 @@ io.on("connection",async (socket) => {
     console.log("new connection with id " + socket.id);
     const token = socket.handshake.auth.token;
     const user = await getUserFromToken(token);
+    console.log("new user with id " + user.id + " info : " + user)
     // if(user.logout){
     //     socket.emit("error" , {
     //         message: "UnAuthorized Access",
